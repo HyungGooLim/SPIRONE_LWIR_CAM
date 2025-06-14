@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stat.h": "c"
+    },
+    "terminal.integrated.scrollback": 100000,
+    "terminal.integrated.persistentSessionScrollback": 100000
+
+}

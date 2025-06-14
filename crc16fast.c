@@ -127,8 +127,8 @@ const CRC16 UpdateCRC16Bytes(unsigned int count, const char *buffer, CRC16 crc) 
 
         int value = *buffer++;
         crc = ByteCRC16(value, crc);
-        printf("crc16fast.c//value:%d\n",value);
-        printf("crc16fast.c//crc:%d\n",crc);
+        //printf("crc16fast.c//value:%d\n",value);
+        //printf("crc16fast.c//crc:%d\n",crc);
         
     }
 	while (--count);

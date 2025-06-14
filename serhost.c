@@ -176,13 +176,13 @@ PHOTON_RESULT SERIAL_API GetComRetries(int *value)
 PHOTON_RESULT CamReadPacketTimeout(SERIAL_PORT portNum, void* rxbuf, int count, CRC16 crc, int timeout)
 {
     /* Attempt to read bytes */
-    printf("\nReadCommPortTimeout function START\n");
-    printf("ReadCommPortTimeout_count값:%d\n",count);
+    //printf("\nReadCommPortTimeout function START\n");
+    //printf("ReadCommPortTimeout_count값:%d\n",count);
     int result = ReadCommPortTimeout(portNum, rxbuf, count, timeout);
-	printf("serhost.c//ReadCommPortTimeout_수신 바이트: %d\n",result);
-    printf("ReadCommPortTimeout function END\n");
-    printf("\n");
-    printf("result(%d)>=count(%d)\n",result,count);
+	//printf("serhost.c//ReadCommPortTimeout_수신 바이트: %d\n",result);
+    //printf("ReadCommPortTimeout function END\n");
+    //printf("\n");
+    //printf("result(%d)>=count(%d)\n",result,count);
     if (result >= count)
 	//if(result >= CAM_OK)
     {
@@ -277,12 +277,12 @@ PHOTON_RESULT SERIAL_API CamReadResponseTimeout(SERIAL_PORT portNum, int func, v
 		if (rxByteLength >= 0 && rxByteLength <= maxLength)
 		{
 			/* Read data portion of the packet */
-            printf("serhost.c//rxByteLength + sizeof(CRC16):%d\n",rxByteLength + sizeof(CRC16));
-            printf("\nCamReadPacketTimeout function START \n");
+            //printf("serhost.c//rxByteLength + sizeof(CRC16):%d\n",rxByteLength + sizeof(CRC16));
+            //printf("\nCamReadPacketTimeout function START \n");
 			result = CamReadPacketTimeout(portNum, rxbuf + PROTO_DATA, rxByteLength + sizeof(CRC16), 0U, timeout);
-            printf("serhost.c//CamReadPacketTimeout_result:%d\n",result);
-            printf("\nCamReadPacketTimeout function END \n");
-            printf("\n");
+            //printf("serhost.c//CamReadPacketTimeout_result:%d\n",result);
+            //printf("\nCamReadPacketTimeout function END \n");
+            //printf("\n");
 			if (result >= CAM_OK)
 			{
                 printf("11)serhost.c//CamReadPacketTimeout_(result %d >=CAM_OK %d ):\n",result,CAM_OK);
@@ -382,10 +382,10 @@ PHOTON_RESULT SERIAL_API CamCallFuncTimeout(SERIAL_PORT portNum, int func, signe
             FlushCommPort(portNum);
 
             /* Send request to camera */
-            printf("\nCamPostRequest function start;\n");
+            //printf("\nCamPostRequest function start;\n");
             result = CamPostRequest(portNum, func, buffer, length);
-            printf("CamPostRequest function END\n");
-            printf("\n");
+            //printf("CamPostRequest function END\n");
+            //printf("\n");
             
             
             

@@ -53,6 +53,10 @@ PHOTON_RESULT SERIAL_API OpenCommPort(SERIAL_PORT uPort)
      commPort = open(device, O_NONBLOCK | O_RDWR);
      //commPort = open(device, O_RDWR | O_NOCTTY | O_SYNC);
      //commPort = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK | O_SYNC);
+     if (commPort < 0) {
+          perror("open");  // 시스템 에러 메시지 출력
+          return -1;
+     }
      
      printf("1)commPort address on serstub.c: %d\n",&commPort);
      printf("2)commPort on serstub.c: %d\n",commPort);
@@ -204,9 +208,9 @@ LONG SERIAL_API WriteCommPort(SERIAL_PORT uPort, LPCVOID szBuffer, LONG dwCount)
      const unsigned char *buf = (const unsigned char *)szBuffer;
 
 
-     printf("6)serstub.c//commPort address: %d\n",&commPort);
-     printf("7)serstub.c//commPort: %d\n",commPort);
-     printf("8)serstub.c//uPort: %d\n",uPort);
+     //printf("6)serstub.c//commPort address: %d\n",&commPort);
+     //printf("7)serstub.c//commPort: %d\n",commPort);
+     //printf("8)serstub.c//uPort: %d\n",uPort);
 
      printf(">>> Writing %ld bytes:\n", dwCount);
      for (int i = 0; i < dwCount; i++) {
@@ -215,7 +219,7 @@ LONG SERIAL_API WriteCommPort(SERIAL_PORT uPort, LPCVOID szBuffer, LONG dwCount)
 
 
      count = write ( commPort, szBuffer, dwCount);
-     printf("9)serstub.c//write: %d\n",count);
+     //printf("9)serstub.c//write: %d\n",count);
      printf("WriteCommPort function END;\n");
      printf("\n");
      return count;

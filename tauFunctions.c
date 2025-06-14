@@ -8,7 +8,7 @@
 #define HISHORT(x)      ((signed short) ((unsigned long) (x) >> 16))
 
 #define MAKE_LONG(l,h)  ((long) ((unsigned short) (l) | (long) (h) << 16))
-
+#define EMBEDDED_EXPORTS 1 //PhotonReadMemory를 살리려고 추가함.
 
 #ifdef EMBEDDED_EXPORTS
 PHOTON_RESULT PhotonReadMemory(int deviceId, unsigned long addr, short byteCount, unsigned char* data)
@@ -23,6 +23,7 @@ PHOTON_RESULT PhotonReadMemory(int deviceId, unsigned long addr, short byteCount
     buffer[2] = PROTO_HTONS(byteCount);
 
     /* Limit count to 256 */
+    // 최대 256바이트씩 읽을 수 있음
     if (byteCount >= 256)
     {
         byteCount = 256;
@@ -37,6 +38,7 @@ PHOTON_RESULT PhotonReadMemory(int deviceId, unsigned long addr, short byteCount
     {
         memset(data, 0xee, byteCount);
     }
+
     return result;
 }
 #endif
@@ -290,23 +292,32 @@ PHOTON_RESULT TauSetFPAType(int deviceId, short  fpaType)
 PHOTON_RESULT TauReadCaptureImage(int deviceId, unsigned long address, short width, long *addrIncr, short pixBuff[])
 {
    PHOTON_RESULT result;
-   short line[320];
-   short pixBuff1[160];
-   short bytes = 320;
+   short line[768]; //768바이트 담기
+   short pixBuff1[640]; //640픽셀씩 읽는다.
+   short bytes = 640*2;
    int ii = 0;
 
-   for (ii = 0; ii < 320; ii += 64)
+   for (ii = 0; ii < 768; ii += 64)
    {
       //Read photon memory to get the image data from flash
       result = PhotonReadMemory(deviceId, address+ii, 64, (unsigned char*)line + ii);
+      // 추가
+      if (result < 0) {
+      printf("Memory read failed at offset %d, result: %d\n", ii, result);
+      }
    }
 
     bytes = expand_line((unsigned char*) line, pixBuff1, bytes);
+    printf("bytes from expand_line: %d\n",bytes);
 
-    memcpy(pixBuff,pixBuff1,160);
-
+    //memcpy(pixBuff,pixBuff1,160);
+    printf("\\\\\\\\\\\\\\\\\\\\\\\\\\   pixBuff1: %d \n", pixBuff1[639]);
+    memcpy(pixBuff,pixBuff1,640*2);
+    printf("\\\\\\\\\\\\\\\\\\\\\\\\\\   pixBuff: %d \n", pixBuff[639]);
 
     *addrIncr = bytes = (bytes + 1) & ~1;
+    printf("bytes from (bytes + 1) & ~1: %d\n",bytes);
+    printf("addrIncr:0x%04lX\n",addrIncr);
     return result;
 }
 
@@ -876,9 +887,6 @@ PHOTON_RESULT TauGetFlashStatus(int deviceId, short *status)
    return result;
 }
 
-/** @} */ /* end of group */
-
-
 /*
  *  ===== expand_line =====
  *      Expand line of compressed data back into 14-bit pixels.
@@ -902,9 +910,12 @@ int expand_line(unsigned char* inp, short* out, int count)
     while (count > 0)
     {
         short code = inp[bytes++];
+        
+        
         if (code & 0x80)
         {
             pixel = pixel + (code & 0x7F) - 64;
+            printf("code & 0x80 code: %d , pixel : %d\n",code , pixel);
 #if 0
             ++diff7;
 #endif
@@ -914,8 +925,10 @@ int expand_line(unsigned char* inp, short* out, int count)
             pixel = pixel + ((code >> 3) & 7) - 4;
             out[0] = pixel;
             ++out;
+            printf("code & 0x40 code: %d , pixel : %d\n",code , pixel);
             count -= 2;
             pixel = pixel + (code & 7) - 4;
+            printf("code & 0x40 code: %d , pixel : %d\n",code , pixel);
 #if 0
             diff3 += 2;
 #endif
@@ -923,6 +936,7 @@ int expand_line(unsigned char* inp, short* out, int count)
         else
         {
             pixel = (code << 8) | inp[bytes++];
+            printf("(code << 8): %d , pixel : %d\n",code , pixel);
 #if 0
             ++diff14;
 #endif
@@ -930,6 +944,9 @@ int expand_line(unsigned char* inp, short* out, int count)
         out[0] = pixel;
         ++out;
         count -= 2;
+        printf("sizeof out[] %d\n",sizeof(out));
+        printf("count -=2 : %d \n",count);
+        printf("Bytes 0 ++: %d \n",bytes);
     }
     return bytes;
 }

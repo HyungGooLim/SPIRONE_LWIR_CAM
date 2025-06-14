@@ -13,7 +13,7 @@ CFLAGS  += -D EMBEDDED_EXPORTS
 LINK = gcc
 EXEC = example.exe
 
-OBJS = crc16fast.o memcpy.o serhost.o serstub.o userFunctions.o main.o
+OBJS = crc16fast.o memcpy.o serhost.o serstub.o userFunctions.o tauFunctions.o main.o raw2jpg.o -ljpeg -lm
 
 #
 # ===== Targets =====
@@ -43,6 +43,12 @@ serstub.o : ../serstub.c
 
 userFunctions.o : ../userFunctions.c
 	$(CC) -c $(CFLAGS) ../userFunctions.c
+
+tauFunctions.o : ../tauFunctions.c
+	$(CC) -c $(CFLAGS) ../tauFunctions.c
+
+raw2jpg.o : ../raw2jpg.c
+	$(CC) -c $(CFLAGS) ../raw2jpg.c
 	
 main.o : main.c
 	$(CC) -c $(CFLAGS) main.c
