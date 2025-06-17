@@ -31,7 +31,7 @@
 #include <errno.h>
 
 
-int commPort;
+extern int commPort;
 struct termios my_termios;
 
 /*!
