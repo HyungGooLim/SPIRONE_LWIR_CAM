@@ -198,22 +198,22 @@ int main(int argc, char* argv[])
    convertRawToJpg((short*)imageBuffer, totalWidth, totalHeight, "LWIR.jpg");
    
 
-	// // txt 파일로 방출 //
-	// const char* path = "image.txt";
-	// FILE* fp = fopen(path, "w");
-	// printf("%d\n",fp);
-	// if (fp == NULL) {
-	// 	perror("Failed to open file for writing");
-	// } else {
-	// 	for (int row = totalHeight-1; row >= 0 ; row--) {
-	// 		for (int col = 0; col < totalWidth; col++) {
-	// 			fprintf(fp, "%d ", imageBuffer[row][col]);
-	// 		}
-	// 		fprintf(fp, "\n");
-	// 	}
-	// 	fclose(fp);
-	// 	printf("Image data successfully written %s\n", path);
-	// }
+	// txt 파일로 방출 //
+	const char* path = "image.txt";
+	FILE* fp = fopen(path, "w");
+	printf("%d\n",fp);
+	if (fp == NULL) {
+		perror("Failed to open file for writing");
+	} else {
+		for (int row = totalHeight-1; row >= 0 ; row--) {
+			for (int col = 0; col < totalWidth; col++) {
+				fprintf(fp, "%d ", imageBuffer[row][col]);
+			}
+			fprintf(fp, "\n");
+		}
+		fclose(fp);
+		printf("Image data successfully written %s\n", path);
+	}
 	
    // Digital outbut확인 코드 //
    PHOTON_DIGITAL_OUT digitalOutMode;
