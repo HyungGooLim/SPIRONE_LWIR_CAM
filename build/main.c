@@ -45,12 +45,23 @@ int main(int argc, char* argv[])
    // Digital outbut 세팅 코드 //
    res = PhotonSetDigitalOut(port, DIGITAL_14BIT_UNFILTERED);
    //res = PhotonSetDigitalOut(port, DIGITAL_FPA_DIMENSIONS);
-   
    if (res >= CAM_OK) {
         printf("Digital output set to 14-bit unfiltered mode successfully.\n");
     } else {
         printf("Failed to set digital output mode. Error: %d\n", res);
     }
+
+    //FFC수행 코드 //
+   res = PhotonDoFFC(port);
+   if (res < CAM_OK)
+   {
+      printf("PhotonDoFFC failed. Error code %d\n", port, res);
+      return -1;
+   } else {
+      printf("PhotonDoFFC Success \n");
+      usleep(1500000); // FFC수행 기다리기
+   }
+
 
    // // 카메라 FPA센서 온도 추출 코드 //
    // printf("PhotonGetFPATemp START \n");
